@@ -8,16 +8,21 @@ const fetchPlanets = async () => {
 };
 
 const Planets = () => {
-  const { data, status } = useQuery('planets', fetchPlanets);
+  const obj = useQuery('planets', fetchPlanets, {
+    staleTime: 2000,
+    onSuccess: () => console.log('data fetched with no problems'),
+  });
+
+  console.log(obj);
 
   return (
     <div>
       <h2>Planets</h2>
-      {status === 'loading' && <div>Data fetching in progress</div>}
-      {status === 'error' && <div>Error fetching data</div>}
-      {status === 'success' && (
+      {obj.status === 'loading' && <div>Data fetching in progress</div>}
+      {obj.status === 'error' && <div>Error fetching data</div>}
+      {obj.status === 'success' && (
         <div>
-          {data.results.map((planet) => (
+          {obj.data.results.map((planet) => (
             <Planet key={planet.name} planet={planet} />
           ))}
         </div>
